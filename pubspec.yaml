@@ -44,6 +44,10 @@ dependencies:
   lottie: ^2.5.0
   marquee: ^2.2.3
   flutter_admin_scaffold: ^1.2.0
+  http:
+  shared_preferences: ^2.2.0
+  jwt_decoder: ^2.0.1
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:

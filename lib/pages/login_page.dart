@@ -1,13 +1,19 @@
-import 'package:dart_flex/pages/interested_categorties.dart';
+import 'dart:convert';
+
+import 'package:dart_flex/constants/todo_url.dart';
+import 'package:dart_flex/models/user_model.dart';
 import 'package:dart_flex/pages/forget_password.dart';
 import 'package:dart_flex/pages/signup_page.dart';
 import 'package:dart_flex/provider/password_provider.dart';
+import 'package:dart_flex/user_types/dash_board.dart';
 import 'package:dart_flex/widgets/password_provider_widgets.dart';
 import 'package:dart_flex/widgets/textformfield_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   static const String nameRoute = '/login-page';
@@ -22,11 +28,58 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool showLoader = false;
+  // ignore: unused_field
+  bool _isNotValidate = false;
+  late SharedPreferences preferences;
+
+  @override
+  void initState() {
+    initSharedPref();
+    super.initState();
+  }
+
+  void initSharedPref() async {
+    preferences = await SharedPreferences.getInstance();
+  }
 
   void toggleLoader() {
     setState(() {
       showLoader = !showLoader;
     });
+  }
+
+  void registerUser() async {
+    if (_emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      Users users = Users(
+          email: _emailController.text.toString(),
+          password: _passwordController.text.toString());
+      var response = await http.post(Uri.parse(login),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(users.toMap()));
+      var jsonRespose = jsonDecode(response.body);
+
+      if (jsonRespose['status']) {
+        var myToken = jsonRespose['token'];
+        preferences.setString('token', myToken);
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DashBoardPage(token: myToken)));
+      } else {}
+    } else {
+      setState(() {
+        _isNotValidate = true;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,8 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, InterestCategories.nameRoute);
+                            registerUser();
                           },
                           style: ButtonStyle(
                             backgroundColor:

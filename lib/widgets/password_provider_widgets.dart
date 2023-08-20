@@ -21,6 +21,7 @@ class PasswordProviderWidget extends StatelessWidget {
             controller: passwordController,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
+            style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Enter password',
               label: Text('Passowrd',

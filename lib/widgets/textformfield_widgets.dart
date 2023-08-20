@@ -14,6 +14,7 @@ class TextFormFieldWidget extends StatelessWidget {
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: 'Enter email',
         prefixIcon: const Icon(Icons.email, color: Colors.red),

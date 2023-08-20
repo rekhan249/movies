@@ -14,7 +14,7 @@ class AdminUser extends StatefulWidget {
 }
 
 class _AdminUserState extends State<AdminUser> {
-  Widget selectedScreen = const DashBoardPage();
+  Widget selectedScreen = const UploadMoveis();
   @override
   Widget build(BuildContext context) {
     return AdminScaffold(
@@ -56,7 +56,7 @@ class _AdminUserState extends State<AdminUser> {
         onSelected: (item) {
           if (item.route == DashBoardPage.nameRoute) {
             setState(() {
-              selectedScreen = const DashBoardPage();
+              selectedScreen = const DashBoardPage(token: '');
             });
           } else if (item.route == UploadMoveis.nameRoute) {
             setState(() {
